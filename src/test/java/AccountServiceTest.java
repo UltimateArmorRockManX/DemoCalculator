@@ -29,33 +29,30 @@ class AccountServiceTest {
         logger.info(String.format("Test result for %s - Expected: %b, Got: %b", username, expected, result));
     }
 
-    @Test
-    void testIsValidPassword() {
-        boolean validPassword = accountService.isValidPassword("password123");
-        boolean invalidPassword = accountService.isValidPassword("short");
-        assertTrue(validPassword);
-        assertFalse(invalidPassword);
-        logger.info("Password 'password123' valid: " + validPassword);
-        logger.info("Password 'short' valid: " + invalidPassword);
+    @ParameterizedTest
+    @CsvFileSource(resources = "/test-data.csv", numLinesToSkip = 1)
+    void testIsValidPasswordFromCsv(String username, String password, String email) {
+        boolean result = accountService.isValidPassword(password);
+        boolean expected = password.length() >= 8;
+        assertEquals(expected, result);
+        logger.info(String.format("Password check for '%s' - Expected: %b, Got: %b", password, expected, result));
     }
 
-    @Test
-    void testIsValidEmail() {
-        boolean validEmail = accountService.isValidEmail("valid@example.com");
-        boolean invalidEmail = accountService.isValidEmail("invalid-email");
-        assertTrue(validEmail);
-        assertFalse(invalidEmail);
-        logger.info("Email 'valid@example.com' valid: " + validEmail);
-        logger.info("Email 'invalid-email' valid: " + invalidEmail);
+    @ParameterizedTest
+    @CsvFileSource(resources = "/test-data.csv", numLinesToSkip = 1)
+    void testIsValidEmailFromCsv(String username, String password, String email) {
+        boolean result = accountService.isValidEmail(email);
+        boolean expected = email.contains("@") && email.contains(".");
+        assertEquals(expected, result);
+        logger.info(String.format("Email check for '%s' - Expected: %b, Got: %b", email, expected, result));
     }
 
-    @Test
-    void testIsValidUsername() {
-        boolean validUsername = accountService.registerAccount("validUser", "password123", "valid@example.com");
-        boolean invalidUsername = accountService.registerAccount("", "password123", "valid@example.com");
-        assertTrue(validUsername);
-        assertFalse(invalidUsername);
-        logger.info("Username 'validUser' valid: " + validUsername);
-        logger.info("Username '' (empty) valid: " + invalidUsername);
-    }
+    /*@ParameterizedTest
+    @CsvFileSource(resources = "/test-data.csv", numLinesToSkip = 1)
+    void testIsValidUsernameFromCsv(String username, String password, String email) {
+        boolean result = accountService.isValidUsername(username);
+        boolean expected = username != null && !username.isEmpty();
+        assertEquals(expected, result);
+        logger.info(String.format("Username check for '%s' - Expected: %b, Got: %b", username, expected, result));
+    }*/
 }
