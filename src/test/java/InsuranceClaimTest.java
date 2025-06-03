@@ -95,5 +95,18 @@ class InsuranceClaimTest {
         assertTrue(output.contains("claimStatus='Pending'"));
     }
 
+    @Test
+    @DisplayName("Constructor throws exception for null claim ID")
+    void testConstructorNullClaimId() {
+        assertThrows(IllegalArgumentException.class, () -> new InsuranceClaim(null, 1000.0));
+    }
+
+    @Test
+    @DisplayName("processClaim throws exception for null input")
+    void testProcessClaimNullInput() {
+        assertThrows(IllegalArgumentException.class, () -> claim.processClaim(null));
+    }
+
+
 }
 
