@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import ThaiTan.AccountService;
 import java.util.logging.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,13 +22,7 @@ class AccountServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "john123,pass123,john@example.com,true",
-            " ,pass123,john@example.com,false",
-            "alice,short,alice@mail.com,false",
-            "bob123,password,bobmail.com,false",
-            "carol,password,carol@domain.com,true"
-    })
+    @CsvFileSource(resources = "/test-data.csv", numLinesToSkip = 1)
     void testRegisterAccount(String username, String password, String email, boolean expected) {
         boolean result = accountService.registerAccount(username, password, email);
         assertEquals(expected, result);
